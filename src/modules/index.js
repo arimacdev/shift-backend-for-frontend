@@ -1,10 +1,9 @@
-// import ProductRoutes from './ProductManagement/product.routes';
+import OrganizationRoutes from './Organization/organization.routes';
+import '../config/database';
 
-// import '../config/database';
-
-// export default (app) => {
-//   app.get('/health', function (req, res) {   
-//     return res.status(HTTPStatus.CREATED).json('server is running');
-//   });
-//   app.use('/api/products/', ProductRoutes);
-// };
+export default (app) => {
+  app.get('/health', function (req, res) {
+    return res.status(200).json('server is running');
+  });
+  app.use('/organization', OrganizationRoutes);
+};

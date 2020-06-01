@@ -7,6 +7,6 @@ const app = express();
 middleware(app);
 apiRoutes(app);
 
-app.listen(8080, () =>
-  console.log(`Shift BFF is running on port ${8080} on ${process.env.ENV} mode`)
+app.listen(9000, () =>
+  console.log(`Shift BFF is running on port ${9000} on ${process.env.ENV} mode`)
 );

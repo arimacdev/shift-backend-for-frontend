@@ -3,6 +3,7 @@ import * as organizationController from './organization.controller';
 
 const routes = new Router();
 
-routes.post('/', [], organizationController.getOrganizationDetails);
+routes.get('/', organizationController.getOrganizationDetails);
+routes.post('/', organizationController.saveOrganizationDetails);
 
 export default routes;

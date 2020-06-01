@@ -1,15 +1,40 @@
 import mongoose, { Schema } from 'mongoose';
 
-const ProductSchema = new Schema({
-  productId: {
+const OrganizationSchema = new Schema({
+  workspace: {
     type: String,
-    unique: true,
-    required: [true, 'productId is mandatory'],
+    required: [true, 'Workspace is required'],
   },
-  productName: {
+  organizationName: {
     type: String,
-    required: [true, 'name is required!'],
+    required: [true, 'Organization Name is required'],
+  },
+  company: {
+    type: String,
+    required: [true, 'Company Name is required'],
+  },
+  organizationLogo: {
+    type: String,
+    required: [true, 'Organization Logo is required'],
+  },
+  workspaceUrl: {
+    type: String,
+    required: [true, 'Workspace Url is required'],
+  },
+  android: {
+    type: {
+      currentVersion: Number,
+      latestVersion: Number,
+      isForceUpdate: Number,
+    },
+  },
+  ios: {
+    type: {
+      currentVersion: Number,
+      latestVersion: Number,
+      isForceUpdate: Number,
+    },
   },
 });
 
-export default mongoose.model('Product', ProductSchema);
+export default mongoose.model('organization', OrganizationSchema);
