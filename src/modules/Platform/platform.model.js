@@ -1,15 +1,15 @@
-import mongoose, { Schema } from 'mongoose';
+// import mongoose, { Schema } from 'mongoose';
 
-const PlatformSchema = new Schema({
-  currentVersion: {
-    type: Number,
-  },
-  latestVersion: {
-    type: Number,
-  },
-  isForceUpdate: {
-    type: Boolean,
-  },
-});
+// const PlatformSchema = new Schema({
+//   currentVersion: {
+//     type: Number,
+//   },
+//   latestVersion: {
+//     type: Number,
+//   },
+//   isForceUpdate: {
+//     type: Boolean,
+//   },
+// });
 
-export default mongoose.model('Platform', PlatformSchema);
+// export default mongoose.model('Platform', PlatformSchema);

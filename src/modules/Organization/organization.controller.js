@@ -1,27 +1,82 @@
 import Organization from './organization.model';
+const mysql = require('mysql');
+
+// connection configurations
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'organization_db',
+});
+
+connection.connect(function (err) {
+  if (err) {
+    return console.error('error: ' + err.message);
+  }
+
+  console.log('Connected to the MySQL server.');
+});
+console.log('Connected to the MySQL server.');
+// });
 
 export async function getOrganizationDetails(req, res) {
   const workspace = req.query.workspace;
-  try {
-    const organization = await Organization.findOne({ workspace: workspace });
-    if (!organization) {
-      return res.status(401).send({
-        status: 401,
-        message: "Organization doesn't exist",
+
+  connection.query(
+    `SELECT * FROM Organization AS O INNER JOIN Mobile AS M ON O.workspaceId = M.workspaceId WHERE O.workspace='${workspace}'`,
+    (error, result) => {
+      if (error) throw error;
+      // result.send(result);
+      console.log('Result', result);
+      if (result.length === 0)
+        return res.status(404).send({
+          status: 404,
+          message: 'Workspace Not Found',
+          data: result,
+        });
+      let android = {};
+      let ios = {};
+      result.forEach((platform) => {
+        if (platform.platform == 'android') {
+          (android.currentVersion = platform.current_version),
+            (android.latestVersion = platform.latest_version),
+            (android.isForceUpdate = platform.isForceUpdate);
+        } else if (platform.platform == 'ios') {
+          (ios.currentVersion = platform.current_version),
+            (ios.latestVersion = platform.latest_version),
+            (ios.isForceUpdate = platform.isForceUpdate);
+        }
+      });
+      let response = {
+        workspaceId: result[0].workspaceId,
+        workspace: result[0].workspaceId,
+        organizationName: result[0].organizationName,
+        company: result[0].company,
+        organizationLogo: result[0].organizationLogo,
+        workspaceUrl: result[0].workspaceUrl,
+        android: android,
+        ios: ios,
+        idpEndpoints: {
+          authorization: result[0].authorization,
+          token: result[0].token,
+        },
+      };
+
+      return res.status(200).send({
+        status: 200,
+        message: 'Organization Retrieved Successfully',
+        data: response,
       });
     }
-    return res.status(200).send({
-      status: 200,
-      message: 'Organization Retrieved Successfully',
-      data: organization,
-    });
-  } catch (error) {
-    return res.status(400).send({
-      status: 400,
-      message: 'Error Retrieving Organization',
-      data: error,
-    });
-  }
+  );
+
+  // } catch (error) {
+  //   return res.status(400).send({
+  //     status: 400,
+  //     message: 'Error Retrieving Organization',
+  //     data: error,
+  //   });
+  // }
 }
 
 export async function saveOrganizationDetails(req, res) {
@@ -35,6 +90,8 @@ export async function saveOrganizationDetails(req, res) {
       workspaceUrl: body.workspaceUrl,
       android: body.android,
       ios: body.ios,
+      idpEndpoints: body.idpEndpoints,
+      notification: body.notification,
     });
     return res.status(200).send({
       status: 200,

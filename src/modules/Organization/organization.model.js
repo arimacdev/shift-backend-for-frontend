@@ -35,6 +35,17 @@ const OrganizationSchema = new Schema({
       isForceUpdate: Number,
     },
   },
+  idpEndpoints: {
+    type: {
+      authorization: String,
+      token: String,
+    },
+  },
+  notification: {
+    type: {
+      slack: String,
+    },
+  },
 });
 
 export default mongoose.model('organization', OrganizationSchema);
