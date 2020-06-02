@@ -5,5 +5,5 @@ export default (app) => {
   app.get('/health', function (req, res) {
     return res.status(200).json('server is running');
   });
-  app.use('/organization', OrganizationRoutes);
+  app.use('/api/bff/organization', OrganizationRoutes);
 };
