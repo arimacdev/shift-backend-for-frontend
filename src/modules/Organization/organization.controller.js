@@ -1,12 +1,12 @@
 import Organization from './organization.model';
-const mysql = require('mysql');
+import constants from '../../config/constants';
+import mysql from 'mysql';
 
-// connection configurations
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'organization_db',
+const connection = mysql.createConnection({
+  host: constants.DB_HOST,
+  user: constants.DB_USER,
+  password: constants.DB_PASSWORD,
+  database: constants.DATABASE,
 });
 
 connection.connect(function (err) {
@@ -14,10 +14,8 @@ connection.connect(function (err) {
     return console.error('error: ' + err.message);
   }
 
-  console.log('Connected to the MySQL server.');
+  console.log('Connected to Database');
 });
-console.log('Connected to the MySQL server.');
-// });
 
 export async function getOrganizationDetails(req, res) {
   const workspace = req.query.workspace;
@@ -40,11 +38,11 @@ export async function getOrganizationDetails(req, res) {
         if (platform.platform == 'android') {
           (android.currentVersion = platform.current_version),
             (android.latestVersion = platform.latest_version),
-            (android.isForceUpdate = platform.isForceUpdate);
+            (android.isForceUpdate = platform.force_update);
         } else if (platform.platform == 'ios') {
           (ios.currentVersion = platform.current_version),
             (ios.latestVersion = platform.latest_version),
-            (ios.isForceUpdate = platform.isForceUpdate);
+            (ios.isForceUpdate = platform.force_update);
         }
       });
       let response = {
@@ -69,14 +67,6 @@ export async function getOrganizationDetails(req, res) {
       });
     }
   );
-
-  // } catch (error) {
-  //   return res.status(400).send({
-  //     status: 400,
-  //     message: 'Error Retrieving Organization',
-  //     data: error,
-  //   });
-  // }
 }
 
 export async function saveOrganizationDetails(req, res) {
