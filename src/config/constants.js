@@ -2,7 +2,7 @@ const defaultConfig = {};
 
 const devConfig = {
   CONFIG_ID: 'development',
-  PORT: 9000,
+  PORT: process.env.PORT || 9000,
   DB_HOST: process.env.ENV.DB_HOST || 'localhost',
   DB_USER: process.env.ENV.DB_USER || 'root',
   DB_PASSWORD: process.env.ENV.DB_PASSWORD || '',
@@ -12,7 +12,7 @@ const devConfig = {
 
 const stagingConfig = {
   CONFIG_ID: 'production',
-  PORT: 9000,
+  PORT: process.env.PORT,
   DB_HOST: process.env.ENV.DB_HOST,
   DB_USER: process.env.ENV.DB_USER,
   DB_PASSWORD: process.env.ENV.DB_PASSWORD,
@@ -22,7 +22,7 @@ const stagingConfig = {
 
 const prodConfig = {
   CONFIG_ID: 'production',
-  PORT: 9000,
+  PORT: process.env.PORT,
   DB_HOST: process.env.ENV.DB_HOST,
   DB_USER: process.env.ENV.DB_USER,
   DB_PASSWORD: process.env.ENV.DB_PASSWORD,
