@@ -20,6 +20,7 @@ connection.connect(function (err) {
 
 export async function getOrganizationDetails(req, res) {
   const workspace = req.query.workspace;
+  const currentVersion = req.query.current_version;
 
   connection.query(
     `SELECT * FROM Organization AS O INNER JOIN Mobile AS M ON O.workspaceId = M.workspaceId WHERE O.workspace='${workspace}'`,
@@ -37,11 +38,11 @@ export async function getOrganizationDetails(req, res) {
       let ios = {};
       result.forEach((platform) => {
         if (platform.platform == 'android') {
-          (android.currentVersion = platform.current_version),
+          (android.currentVersion = currentVersion),
             (android.latestVersion = platform.latest_version),
             (android.isForceUpdate = platform.force_update);
         } else if (platform.platform == 'ios') {
-          (ios.currentVersion = platform.current_version),
+          (ios.currentVersion = currentVersion),
             (ios.latestVersion = platform.latest_version),
             (ios.isForceUpdate = platform.force_update);
         }
