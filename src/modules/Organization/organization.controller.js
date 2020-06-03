@@ -20,7 +20,7 @@ connection.connect(function (err) {
 
 export async function getOrganizationDetails(req, res) {
   const workspace = req.query.workspace;
-  const currentVersion = req.query.current_version;
+  const currentVersion = Number(req.query.current_version);
 
   connection.query(
     `SELECT * FROM Organization AS O INNER JOIN Mobile AS M ON O.workspaceId = M.workspaceId WHERE O.workspace='${workspace}'`,
