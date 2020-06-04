@@ -20,6 +20,7 @@ connection.connect(function (err) {
 
 export async function getOrganizationDetails(req, res) {
   const workspace = req.query.workspace;
+  const currentVersion = Number(req.query.current_version);
 
   connection.query(
     `SELECT * FROM Organization AS O INNER JOIN Mobile AS M ON O.workspaceId = M.workspaceId WHERE O.workspace='${workspace}'`,
@@ -37,18 +38,18 @@ export async function getOrganizationDetails(req, res) {
       let ios = {};
       result.forEach((platform) => {
         if (platform.platform == 'android') {
-          (android.currentVersion = platform.current_version),
+          (android.currentVersion = currentVersion),
             (android.latestVersion = platform.latest_version),
             (android.isForceUpdate = platform.force_update);
         } else if (platform.platform == 'ios') {
-          (ios.currentVersion = platform.current_version),
+          (ios.currentVersion = currentVersion),
             (ios.latestVersion = platform.latest_version),
             (ios.isForceUpdate = platform.force_update);
         }
       });
       let response = {
         workspaceId: result[0].workspaceId,
-        workspace: result[0].workspaceId,
+        workspace: result[0].workspace,
         organizationName: result[0].organizationName,
         company: result[0].company,
         organizationLogo: result[0].organizationLogo,
@@ -58,6 +59,7 @@ export async function getOrganizationDetails(req, res) {
         idpEndpoints: {
           authorization: result[0].authorization,
           token: result[0].token,
+          issuser: result[0].issuer,
         },
       };
 
@@ -93,6 +95,33 @@ export async function saveOrganizationDetails(req, res) {
     return res.status(400).send({
       status: 400,
       message: 'Error Adding Product',
+      data: error,
+    });
+  }
+}
+
+export async function updateMobileDetails(req, res) {
+  try {
+    const android = req.body.android;
+    const ios = req.body.ios;
+    console.log('android', android);
+    connection.query(
+      `UPDATE Mobile SET current_version='${android.currentVersion}', latest_version='${android.latestVersion}', force_update='${android.isForceUpdate}' WHERE workspaceId='${req.body.workspace}'`,
+      (error, result) => {
+        if (error) console.log('error', error);
+        console.log('result', result);
+      }
+    );
+
+    return res.status(200).send({
+      status: 200,
+      message: 'Mobile Details Updated Successfully',
+      data: req.body,
+    });
+  } catch (error) {
+    return res.status(400).send({
+      status: 400,
+      message: 'Error Updating Mobile',
       data: error,
     });
   }
