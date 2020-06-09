@@ -60,6 +60,7 @@ export async function getOrganizationDetails(req, res) {
           authorization: result[0].authorization,
           token: result[0].token,
           issuser: result[0].issuer,
+          logout: result[0].logout,
         },
       };
 
@@ -99,19 +100,42 @@ export async function saveOrganizationDetails(req, res) {
     });
   }
 }
-
+// ,
 export async function updateMobileDetails(req, res) {
   try {
     const android = req.body.android;
     const ios = req.body.ios;
-    console.log('android', android);
-    connection.query(
-      `UPDATE Mobile SET current_version='${android.currentVersion}', latest_version='${android.latestVersion}', force_update='${android.isForceUpdate}' WHERE workspaceId='${req.body.workspace}'`,
+    console.log('android', android.currentVersion);
+    const androidQuery = connection.query(
+      'UPDATE Mobile SET current_version=?, latest_version=?, force_update=? WHERE workspaceId=? AND platform=?',
+      [
+        android.currentVersion,
+        android.latestVersion,
+        android.isForceUpdate,
+        req.body.workspaceId,
+        'android',
+      ],
       (error, result) => {
         if (error) console.log('error', error);
         console.log('result', result);
       }
     );
+    console.log('android', androidQuery.sql);
+    const iosQuery = connection.query(
+      'UPDATE Mobile SET current_version=?, latest_version=?, force_update=? WHERE workspaceId=? AND platform=?',
+      [
+        ios.currentVersion,
+        ios.latestVersion,
+        ios.isForceUpdate,
+        req.body.workspaceId,
+        'ios',
+      ],
+      (error, result) => {
+        if (error) console.log('error', error);
+        console.log('result', result);
+      }
+    );
+    console.log('ios', iosQuery.sql);
 
     return res.status(200).send({
       status: 200,
